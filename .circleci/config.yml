@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  aws-ecr: circleci/aws-ecr@6.15.1
+  aws-ecr: circleci/aws-ecr@6.10.0
 
 workflows:
   build_and_push_image:
@@ -13,7 +13,6 @@ workflows:
           create-repo: false
           dockerfile: Dockerfile
           path: .
-#          profile-name: fuptest
           region: AWS_REGION
           repo: h10-fp-circleci-test
           tag: "$CIRCLE_SHA1"
