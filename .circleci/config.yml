@@ -13,7 +13,6 @@ workflows:
           create-repo: false
           dockerfile: Dockerfile
           path: .
-          profile-name: fuptest
           region: AWS_REGION
           repo: h10-fp-circleci-test
           tag: "$CIRCLE_SHA1"
