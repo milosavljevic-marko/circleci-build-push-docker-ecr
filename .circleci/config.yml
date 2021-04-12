@@ -2,7 +2,7 @@ version: 2.1
 
 orbs:
   aws-ecr: circleci/aws-ecr@6.11.0
-  h10-common-build: helium10/h10-common-build@0.0
+#  h10-common-build: helium10/h10-common-build@0.0
 
 workflows:
   build_and_push_image:
@@ -13,7 +13,7 @@ workflows:
           aws-secret-access-key: AWS_SECRET_ACCESS_KEY
           dockerfile: Dockerfile
           path: .
-          executor: h10-common-build/default
+#          executor: h10-common-build/default
           region: AWS_REGION
           repo: h10-fp-circleci-test
           tag: "$CIRCLE_SHA1"
