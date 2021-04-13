@@ -1,32 +1,43 @@
 version: 2.1
+anchors:
+  context: &context
+    context: ci-h10-followup
+    filters:
+      branches:
+        only: main
+
+  environment: &environment
+    environment:
+      BASH_ENV: ~/.bashrc
+      NODE_VERSION: "10.19.0"
+
+  common_args: &common_args
+    executor: h10-common-build/default
+    resource_class: large
 
 orbs:
-  aws-ecr: circleci/aws-ecr@6.11.0
-#  h10-common-build: helium10/h10-common-build@0.0
+  h10-common-build: helium10/h10-common-build@0.0
+  h10-ecr-build: helium10/h10-ecr-build@0.1
+  h10-slack: helium10/h10-slack@0.1
 
 workflows:
-  build_and_push_image:
+  build:
     jobs:
-      - aws-ecr/build-and-push-image:
-          account-url: AWS_ECR_ACCOUNT_URL
-          aws-access-key-id: AWS_ACCESS_KEY_ID
-          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+      # Docker Build and Push to ECR Jobs
+      - h10-ecr-build/build-push:
+          <<: *context
+          name: Build and Push Docker to ECR
+          resource_class: large
+          path: ./
           dockerfile: Dockerfile
-          path: .
-#          executor: h10-common-build/default
-          region: AWS_REGION
-          repo: h10-fp-circleci-test
-          tag: "$CIRCLE_SHA1"
-      - aws-ecr/build-and-push-image:
-          account-url: AWS_ECR_ACCOUNT_URL
-          aws-access-key-id: AWS_ACCESS_KEY_ID
-          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
-          dockerfile: ./apiv2/Dockerfile
-          path: .
-#          executor: h10-common-build/default
-          region: AWS_REGION
-          repo: h10-fp-circleci-test
-          tag: "$CIRCLE_SHA1"
+          docker-layer-caching: true
+          tag: latest
+          push-latest: true
+          send-start-message: true
+          send-finished-message: true
+          mutability: MUTABLE
+          additional_ecr_auth: false
+          additional_ecr_account_id: $H10APP_AWS_ID
 
 
 
